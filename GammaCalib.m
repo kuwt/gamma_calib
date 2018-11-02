@@ -1,13 +1,23 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%Read Images and extract ROI graylevel to Iout%%%
-directoryName = 'testscene//4_12000//';
+% Gamma calib
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% input variable %%%%%%%%%%%%%%%%
+directoryName = 'testscene//4_20_250_unre3_4000//';
 %filesPath = strcat(directoryName,'CamB*.*');
 filesPath = strcat(directoryName,'daA*.*');
+ROICenterX = 622;
+ROICenterY = 368;
+minStep = 20;
+maxStep = 250;
+stepSize = 4;
+
+%%%%Read Images and extract ROI graylevel to Iout%%%
 Files=dir(filesPath);
 Iin =double(zeros(1,length(Files)));
 Iout =double(zeros(1,length(Files)));
-ROICenterX = 600;
-ROICenterY = 250;
+
 
 for k=1:length(Files)
  FileNames=Files(k).name;
@@ -20,12 +30,12 @@ for k=1:length(Files)
      end
  end
  Iout(1,k)=Iout(1,k)/pixelcount;
- Iin(1,k)=(k-1)*4;
+ Iin(1,k)=minStep + (k-1)*stepSize;
 end
 
 %%%%fitting%%%
 p = polyfit(Iout,Iin,7);
-
+fprintf('p = %f %f %f %f %f %f %f %f\n' ,p(1),p(2),p(3),p(4),p(5),p(6),p(7),p(8));
 %%%%plotting%%%
 figure
 axes(); % produce plot window with axes

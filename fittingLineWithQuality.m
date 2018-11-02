@@ -4,7 +4,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%% input variable %%%%%%%%%%%%%%%%
-directoryName = 'testscene//4_20_250_unre3_15000_paperboard_3//';
+directoryName = 'testscene//4_20_250_unre3_15000g_paperboard//';
 filesPath = strcat(directoryName,'daA*.*');
 ROICenterX = 622;
 ROICenterY = 368;
@@ -13,10 +13,11 @@ maxStep = 250;
 stepSize = 4;
 %%%%Read Images and extract ROI graylevel to Iout%%%
 Files=dir(filesPath);
-Iin =double(zeros(1,length(Files)));
+numOfData = length(Files);
+Iin = double(zeros(1,length(Files)));
 Iout =double(zeros(1,length(Files)));
 
-for k=1:length(Files)
+for k=1:numOfData
  FileNames=Files(k).name;
  I=imread(strcat(directoryName,FileNames));
  pixelcount = 0;
@@ -31,27 +32,32 @@ for k=1:length(Files)
 end
 
 %%%%fitting%%%
-p = polyfit(Iout,Iin,7);
-fprintf('p = %f %f %f %f %f %f %f %f\n' ,p(1),p(2),p(3),p(4),p(5),p(6),p(7), p(8));
+p = polyfit(Iin,Iout,1);
+fprintf('p = %f %f\n' ,p(1),p(2));
 
 %%%%plotting%%%
-figure
-axes(); % produce plot window with axes
-plot(Iout,Iin,'o');%Iin_x,Iout_y
-ylabel('Ici');
-xlabel('Ico');
-hold on
-
-Io_max=max(Iout);
-Io_min=min(Iout);
-x_fit = linspace( Io_min ,Io_max);
-y_fit = polyval(p,x_fit);
-plot(x_fit,y_fit,'r');
-hold on
-
 figure
 axes(); % produce plot window with axes
 plot(Iin,Iout,'o');%Iin_x,Iout_y
 ylabel('Ico');
 xlabel('Ici');
 hold on
+
+Ii_max=max(Iin);
+Ii_min=min(Iin);
+x_fit = linspace( Ii_min ,Ii_max);
+y_fit = polyval(p,x_fit);
+plot(x_fit,y_fit,'r');
+hold on
+
+% get the root average square error 
+totalSqError = 0;
+for i=1:numOfData
+    SinglePtErr = (p(1) * Iin(i) + p(2)) - Iout(i);
+    sqSinglePtErr = SinglePtErr^2;
+    totalSqError = totalSqError + sqSinglePtErr;
+end
+AvgSqErr = totalSqError / numOfData;
+rootAvgSqError = sqrt(AvgSqErr);
+err = rootAvgSqError;
+fprintf('root average square error = %f\n',err );
