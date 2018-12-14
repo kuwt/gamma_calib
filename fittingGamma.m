@@ -4,8 +4,8 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%% input variable %%%%%%%%%%%%%%%%
-directoryName = 'testscene//4_20_250_unre3_15000_paperboard_3//';
-filesPath = strcat(directoryName,'daA*.*');
+directoryName = 'testscene//666//';
+filesPath = strcat(directoryName,'0*.*');
 ROICenterX = 622;
 ROICenterY = 368;
 minStep = 20;
@@ -17,7 +17,11 @@ Iin =double(zeros(1,length(Files)));
 Iout =double(zeros(1,length(Files)));
 
 for k=1:length(Files)
+ if (k ~= 58)
+    % continue;
+ end
  FileNames=Files(k).name;
+ fprintf('FileName = %s\n', FileNames);
  I=imread(strcat(directoryName,FileNames));
  pixelcount = 0;
  for h=-4:5
@@ -28,6 +32,7 @@ for k=1:length(Files)
  end
  Iout(1,k)=Iout(1,k)/pixelcount;
  Iin(1,k)= minStep + (k-1)*stepSize;
+ fprintf('imageId = %d Iin = %f  Iout = %f pixelcount = %d\n', k, Iin(1,k), Iout(1,k) ,pixelcount );
 end
 
 %%%%fitting%%%
