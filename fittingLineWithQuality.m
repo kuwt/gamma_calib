@@ -4,7 +4,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%% input variable %%%%%%%%%%%%%%%%
-directoryName = 'testscene//4_20_250_unre3_15000g_paperboard//';
+directoryName = 'testscene//4_20_250_unre3_4000g//';
 filesPath = strcat(directoryName,'daA*.*');
 ROICenterX = 622;
 ROICenterY = 368;
@@ -53,7 +53,7 @@ hold on
 % get the root average square error 
 totalSqError = 0;
 for i=1:numOfData
-    SinglePtErr = (p(1) * Iin(i) + p(2)) - Iout(i);
+    SinglePtErr = (p(1) * Iin(i) + p(2)) - Iout(i)
     sqSinglePtErr = SinglePtErr^2;
     totalSqError = totalSqError + sqSinglePtErr;
 end
